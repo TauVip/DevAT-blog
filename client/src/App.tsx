@@ -1,12 +1,24 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Dispatch } from 'redux'
+import { Alert } from './components/alert/Alert'
 import Footer from './components/global/Footer'
 import Header from './components/global/Header'
 import PageRender from './PageRender'
+import { refreshToken } from './redux/actions/authAction'
 
 function App() {
+  const dispatch: Dispatch<any> = useDispatch()
+
+  useEffect(() => {
+    dispatch(refreshToken())
+  }, [dispatch])
+
   return (
     <div className='container'>
       <BrowserRouter>
+        <Alert />
         <Header />
         <Routes>
           <Route path='/' element={<PageRender />} />

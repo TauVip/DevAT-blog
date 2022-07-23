@@ -25,4 +25,4 @@ import './config/database'
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log('Server is running on port', PORT))
 
-// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | REACT LOGIN(2) #9
+// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | UPLOAD CLOUDINARY #18 | 8:08 / 24:47
