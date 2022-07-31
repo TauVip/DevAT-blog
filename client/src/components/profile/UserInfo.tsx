@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
-import { updateUser } from '../../redux/actions/profileAction'
+import { resetPassword, updateUser } from '../../redux/actions/profileAction'
 import {
   FormSubmit,
   InputChange,
@@ -27,7 +27,7 @@ const UserInfo = () => {
   const [typePass, setTypePass] = useState(false)
   const [typeCfPass, setTypeCfPass] = useState(false)
 
-  const { name, account, avatar, password, cf_password } = user
+  const { name, avatar, password, cf_password } = user
 
   const handleChangeInput = (e: InputChange) => {
     const { name, value } = e.target
@@ -47,6 +47,9 @@ const UserInfo = () => {
     e.preventDefault()
 
     if (avatar || name) dispatch(updateUser(avatar, name, auth))
+
+    if (password && auth.access_token)
+      dispatch(resetPassword(password, cf_password, auth.access_token))
   }
 
   if (!auth.user) return <NotFound />
@@ -97,6 +100,12 @@ const UserInfo = () => {
         />
       </div>
 
+      {auth.user.type !== 'register' && (
+        <small className='text-danger'>
+          * Quick login account with {auth.user.type} can't use this function *
+        </small>
+      )}
+
       <div className='form-group my-3'>
         <label htmlFor='password'>Password</label>
 
@@ -108,6 +117,7 @@ const UserInfo = () => {
             name='password'
             value={password}
             onChange={handleChangeInput}
+            disabled={auth.user.type !== 'register'}
           />
 
           <small onClick={() => setTypePass(!typePass)}>
@@ -127,6 +137,7 @@ const UserInfo = () => {
             name='cf_password'
             value={cf_password}
             onChange={handleChangeInput}
+            disabled={auth.user.type !== 'register'}
           />
 
           <small onClick={() => setTypeCfPass(!typeCfPass)}>
