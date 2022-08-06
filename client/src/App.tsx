@@ -7,12 +7,14 @@ import Footer from './components/global/Footer'
 import Header from './components/global/Header'
 import PageRender from './PageRender'
 import { refreshToken } from './redux/actions/authAction'
+import { getCategories } from './redux/actions/categoryAction'
 
 function App() {
   const dispatch: Dispatch<any> = useDispatch()
 
   useEffect(() => {
     dispatch(refreshToken())
+    dispatch(getCategories())
   }, [dispatch])
 
   return (

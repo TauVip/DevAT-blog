@@ -18,6 +18,8 @@ app.use(cookieParser())
 // Routes
 app.use('/api', routes.authRouter)
 app.use('/api', routes.userRouter)
+app.use('/api', routes.categoryRouter)
+app.use('/api', routes.blogRouter)
 
 // Database
 import './config/database'
@@ -26,4 +28,4 @@ import './config/database'
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log('Server is running on port', PORT))
 
-// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | BE-CATEGORY #21 | 4:26 / 31:25
+// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | BE - HOME BLOGS #28

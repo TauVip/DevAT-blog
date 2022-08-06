@@ -6,7 +6,6 @@ import { RootStore } from '../../utils/TypeScript'
 
 const Menu = () => {
   const { auth } = useSelector((state: RootStore) => state)
-  console.log(auth.access_token)
 
   const { pathname } = useLocation()
   const dispatch: Dispatch<any> = useDispatch()
@@ -32,6 +31,15 @@ const Menu = () => {
           </Link>
         </li>
       ))}
+
+      {auth.user?.role === 'admin' && (
+        <li className={`nav-item ${isActive('/category')}`}>
+          <Link to='category' className='nav-link'>
+            Category
+          </Link>
+        </li>
+      )}
+
       {auth.user && (
         <li className='nav-item dropdown'>
           <span
