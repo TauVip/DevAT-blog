@@ -1,4 +1,4 @@
-import { Response } from 'express'
+import { Response, Request } from 'express'
 import { IReqAuth } from '../config/interface'
 import Users from '../models/userModel'
 import bcrypt from 'bcrypt'
@@ -22,11 +22,9 @@ const userCtrl = {
       return res.status(400).json({ msg: 'Invalid Authentication.' })
 
     if (req.user.type !== 'register')
-      return res
-        .status(400)
-        .json({
-          msg: `Quick login account with ${req.user.type} can't use this function.`
-        })
+      return res.status(400).json({
+        msg: `Quick login account with ${req.user.type} can't use this function.`
+      })
 
     try {
       const { password } = req.body
@@ -38,6 +36,14 @@ const userCtrl = {
       )
 
       res.json({ msg: 'Reset Password Success!' })
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message })
+    }
+  },
+  getUser: async (req: Request, res: Response) => {
+    try {
+      const user = await Users.findById(req.params.id).select('-password')
+      res.json(user)
     } catch (err: any) {
       return res.status(500).json({ msg: err.message })
     }

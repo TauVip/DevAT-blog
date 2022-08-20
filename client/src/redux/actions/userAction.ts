@@ -1,9 +1,10 @@
 import { Dispatch } from 'redux'
-import { patchAPI } from '../../utils/FetchData'
+import { getAPI, patchAPI } from '../../utils/FetchData'
 import { checkImage, imageUpload } from '../../utils/ImageUpload'
 import { checkPassword } from '../../utils/Valid'
 import { ALERT, IAlertType } from '../types/alertType'
 import { AUTH, IAuth, IAuthType } from '../types/authType'
+import { GET_OTHER_INFO, IGetOtherInfoType } from '../types/profileType'
 
 export const updateUser =
   (avatar: File, name: string, auth: IAuth) =>
@@ -61,6 +62,24 @@ export const resetPassword =
       const res = await patchAPI('reset_password', { password }, token)
 
       dispatch({ type: ALERT, payload: { success: res.data.msg } })
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
+    }
+  }
+
+export const getOtherInfo =
+  (id: string) =>
+  async (dispatch: Dispatch<IAlertType | IGetOtherInfoType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } })
+
+      const res = await getAPI(`user/${id}`)
+      dispatch({
+        type: GET_OTHER_INFO,
+        payload: res.data
+      })
+
+      dispatch({ type: ALERT, payload: { loading: false } })
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }

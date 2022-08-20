@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
-import { resetPassword, updateUser } from '../../redux/actions/profileAction'
+import { resetPassword, updateUser } from '../../redux/actions/userAction'
 import {
   FormSubmit,
   InputChange,

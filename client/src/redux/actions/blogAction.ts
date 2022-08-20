@@ -3,7 +3,14 @@ import { getAPI, postAPI } from '../../utils/FetchData'
 import { imageUpload } from '../../utils/ImageUpload'
 import { IBlog } from '../../utils/TypeScript'
 import { ALERT, IAlertType } from '../types/alertType'
-import { GET_HOME_BLOGS, IGetHomeBlogsType } from '../types/blogType'
+import {
+  GET_BLOGS_CATEGORY_ID,
+  GET_BLOGS_USER_ID,
+  GET_HOME_BLOGS,
+  IGetBlogsCategoryType,
+  IGetBlogsUserType,
+  IGetHomeBlogsType
+} from '../types/blogType'
 
 export const createBlog =
   (blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
@@ -36,6 +43,48 @@ export const getHomeBlogs =
       dispatch({
         type: GET_HOME_BLOGS,
         payload: res.data
+      })
+
+      dispatch({ type: ALERT, payload: { loading: false } })
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
+    }
+  }
+
+export const getBlogsByCategoryId =
+  (id: string, search: string) =>
+  async (dispatch: Dispatch<IAlertType | IGetBlogsCategoryType>) => {
+    try {
+      let limit = 8
+      let value = search ? search : `?page=${1}`
+
+      dispatch({ type: ALERT, payload: { loading: true } })
+
+      const res = await getAPI(`blogs/category/${id}${value}&limit=${limit}`)
+      dispatch({
+        type: GET_BLOGS_CATEGORY_ID,
+        payload: { ...res.data, id, search }
+      })
+
+      dispatch({ type: ALERT, payload: { loading: false } })
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
+    }
+  }
+
+export const getBlogsByUserId =
+  (id: string | undefined, search: string) =>
+  async (dispatch: Dispatch<IAlertType | IGetBlogsUserType>) => {
+    try {
+      let limit = 3
+      let value = search ? search : `?page=${1}`
+
+      dispatch({ type: ALERT, payload: { loading: true } })
+
+      const res = await getAPI(`blogs/user/${id}${value}&limit=${limit}`)
+      dispatch({
+        type: GET_BLOGS_USER_ID,
+        payload: { ...res.data, id, search }
       })
 
       dispatch({ type: ALERT, payload: { loading: false } })

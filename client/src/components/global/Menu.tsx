@@ -6,6 +6,7 @@ import { RootStore } from '../../utils/TypeScript'
 
 const Menu = () => {
   const { auth } = useSelector((state: RootStore) => state)
+  console.log(auth.access_token)
 
   const { pathname } = useLocation()
   const dispatch: Dispatch<any> = useDispatch()

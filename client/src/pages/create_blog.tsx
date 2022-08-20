@@ -7,7 +7,6 @@ import Quill from '../components/editor/ReactQuill'
 import NotFound from '../components/global/NotFound'
 import { createBlog } from '../redux/actions/blogAction'
 import { ALERT } from '../redux/types/alertType'
-import { imageUpload } from '../utils/ImageUpload'
 import { IBlog, RootStore } from '../utils/TypeScript'
 import { validCreateBlog } from '../utils/Valid'
 

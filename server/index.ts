@@ -20,6 +20,7 @@ app.use('/api', routes.authRouter)
 app.use('/api', routes.userRouter)
 app.use('/api', routes.categoryRouter)
 app.use('/api', routes.blogRouter)
+app.use('/api', routes.commentRouter)
 
 // Database
 import './config/database'
@@ -28,4 +29,4 @@ import './config/database'
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log('Server is running on port', PORT))
 
-// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | BE - GET BLOGS BY CATEGORY #30 | 8:02 / 25:47
+// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | FE - UPDATE COMMENTS #43 | 11:12 / 30:52

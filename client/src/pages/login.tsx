@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import LoginPass from '../components/auth/LoginPass'
 import LoginSms from '../components/auth/LoginSms'
 import SocialLogin from '../components/auth/SocialLogin'
@@ -8,13 +8,18 @@ import { RootStore } from '../utils/TypeScript'
 
 const Login = () => {
   const { auth } = useSelector((state: RootStore) => state)
+
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [sms, setSms] = useState(false)
 
   useEffect(() => {
-    if (auth.access_token) navigate('/')
-  }, [auth.access_token, navigate])
+    if (auth.access_token) {
+      let url = location.search ? location.search.replace('?', '/') : '/'
+      navigate(url)
+    }
+  }, [auth.access_token, location.search, navigate])
 
   return (
     <div className='auth_page'>
@@ -37,7 +42,7 @@ const Login = () => {
 
         <p>
           You don't have an account?{' '}
-          <Link to='/register' style={{ color: 'crimson' }}>
+          <Link to={`/register${location.search}`} style={{ color: 'crimson' }}>
             Register Now
           </Link>
         </p>

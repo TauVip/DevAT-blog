@@ -71,7 +71,7 @@ let container = [
   [{ size: ['small', false, 'large', 'huge'] }],
 
   ['bold', 'italic', 'underline', 'strike'],
-  ['blackquote', 'code-block'],
+  ['blockquote', 'code-block', 'link'],
   [{ color: [] }, { background: [] }],
   [{ script: 'sub' }, { script: 'super' }],
 
