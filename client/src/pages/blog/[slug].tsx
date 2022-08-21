@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { showErrMsg } from '../../components/alert/Alert'
 import DisplayBlog from '../../components/blog/DisplayBlog'
 import Loading from '../../components/global/Loading'
 import { getAPI } from '../../utils/FetchData'
-import { IBlog } from '../../utils/TypeScript'
+import { IBlog, RootStore } from '../../utils/TypeScript'
 
 const DetailBlog = () => {
+  const { socket } = useSelector((state: RootStore) => state)
+
   const id = useParams().slug
 
   const [blog, setBlog] = useState<IBlog>()
@@ -30,6 +33,15 @@ const DetailBlog = () => {
 
     return () => setBlog(undefined)
   }, [id])
+
+  // Join Room
+  useEffect(() => {
+    if (!id || !socket) return
+
+    socket.emit('joinRoom', id)
+
+    return () => socket.emit('outRoom', id)
+  }, [id, socket])
 
   if (loading) return <Loading />
   return (

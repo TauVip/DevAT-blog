@@ -4,6 +4,9 @@ export const CREATE_COMMENT = 'CREATE_COMMENT'
 export const GET_COMMENTS = 'GET_COMMENTS'
 export const REPLY_COMMENT = 'REPLY_COMMENT'
 export const UPDATE_COMMENT = 'UPDATE_COMMENT'
+export const UPDATE_REPLY_COMMENT = 'UPDATE_REPLY_COMMENT'
+export const DELETE_COMMENT = 'DELETE_COMMENT'
+export const DELETE_REPLY_COMMENT = 'DELETE_REPLY_COMMENT'
 
 export interface ICommentState {
   data: IComment[]
@@ -26,7 +29,12 @@ export interface IReplyCommentType {
 }
 
 export interface IUpdateCommentType {
-  type: typeof UPDATE_COMMENT
+  type: typeof UPDATE_COMMENT | typeof UPDATE_REPLY_COMMENT
+  payload: IComment
+}
+
+export interface IDeleteCommentType {
+  type: typeof DELETE_COMMENT | typeof DELETE_REPLY_COMMENT
   payload: IComment
 }
 
@@ -35,3 +43,4 @@ export type ICommentType =
   | IGetCommentsType
   | IReplyCommentType
   | IUpdateCommentType
+  | IDeleteCommentType

@@ -1,16 +1,20 @@
 import { Dispatch } from 'redux'
-import { getAPI, postAPI } from '../../utils/FetchData'
+import { deleteAPI, getAPI, patchAPI, postAPI } from '../../utils/FetchData'
 import { IComment } from '../../utils/TypeScript'
 import { ALERT, IAlertType } from '../types/alertType'
 import {
   CREATE_COMMENT,
+  DELETE_COMMENT,
+  DELETE_REPLY_COMMENT,
   GET_COMMENTS,
   ICreateCommentType,
+  IDeleteCommentType,
   IGetCommentsType,
   IReplyCommentType,
   IUpdateCommentType,
   REPLY_COMMENT,
-  UPDATE_COMMENT
+  UPDATE_COMMENT,
+  UPDATE_REPLY_COMMENT
 } from '../types/commentType'
 
 export const createComment =
@@ -19,10 +23,10 @@ export const createComment =
     try {
       const res = await postAPI('comment', data, token)
 
-      dispatch({
-        type: CREATE_COMMENT,
-        payload: { ...res.data, user: data.user }
-      })
+      // dispatch({
+      //   type: CREATE_COMMENT,
+      //   payload: { ...res.data, user: data.user }
+      // })
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }
@@ -68,8 +72,27 @@ export const updateComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IUpdateCommentType>) => {
     try {
-      console.log({ data, token })
-      dispatch({ type: UPDATE_COMMENT, payload: data })
+      dispatch({
+        type: data.comment_root ? UPDATE_REPLY_COMMENT : UPDATE_COMMENT,
+        payload: data
+      })
+
+      await patchAPI(`comment/${data._id}`, { content: data.content }, token)
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
+    }
+  }
+
+export const deleteComment =
+  (data: IComment, token: string) =>
+  async (dispatch: Dispatch<IAlertType | IDeleteCommentType>) => {
+    try {
+      dispatch({
+        type: data.comment_root ? DELETE_REPLY_COMMENT : DELETE_COMMENT,
+        payload: data
+      })
+
+      await deleteAPI(`comment/${data._id}`, token)
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }

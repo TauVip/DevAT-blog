@@ -5,7 +5,7 @@ import LiteQuill from '../editor/LiteQuill'
 interface IProps {
   callback: (body: string) => void
   edit?: IComment
-  setEdit?: (edit: IComment) => void
+  setEdit?: (edit?: IComment) => void
 }
 
 const Input: React.FC<IProps> = ({ callback, edit, setEdit }) => {
@@ -20,7 +20,10 @@ const Input: React.FC<IProps> = ({ callback, edit, setEdit }) => {
   const handleSubmit = () => {
     const div = divRef.current
     const text = div?.innerText as string
-    if (!text.trim()) return
+    if (!text.trim()) {
+      if (setEdit) return setEdit(undefined)
+      return
+    }
 
     callback(body)
 

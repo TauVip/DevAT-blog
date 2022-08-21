@@ -6,24 +6,22 @@ interface IProps {
   reply_user?: IUser
 }
 
-const AvatarReply: React.FC<IProps> = ({ user, reply_user }) => {
-  return (
-    <div className='avatar_reply'>
-      <img src={user.avatar} alt='avatar' />
+const AvatarReply: React.FC<IProps> = ({ user, reply_user }) => (
+  <div className='avatar_reply'>
+    <img src={user.avatar} alt='avatar' />
 
-      <div className='ms-1'>
-        <small>
-          <Link to={`/profile/${user._id}`} style={{ textDecoration: 'none' }}>
-            {user.name}
-          </Link>
-        </small>
+    <div className='ms-1'>
+      <small>
+        <Link to={`/profile/${user._id}`} style={{ textDecoration: 'none' }}>
+          {user.name}
+        </Link>
+      </small>
 
-        <small className='reply-text'>
-          {' Reply to '}
-          <Link to={`/profile/${reply_user?._id}`}>{reply_user?.name}</Link>
-        </small>
-      </div>
+      <small className='reply-text'>
+        {' Reply to '}
+        <Link to={`/profile/${reply_user?._id}`}>{reply_user?.name}</Link>
+      </small>
     </div>
-  )
-}
+  </div>
+)
 export default AvatarReply

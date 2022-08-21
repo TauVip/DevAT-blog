@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
-import { replyComment, updateComment } from '../../redux/actions/commentAction'
+import {
+  deleteComment,
+  replyComment,
+  updateComment
+} from '../../redux/actions/commentAction'
 import { IComment, RootStore } from '../../utils/TypeScript'
 import Input from './Input'
 
@@ -52,9 +56,18 @@ const CommentList: React.FC<IProps> = ({
     setEdit(undefined)
   }
 
+  const handleDelete = (comment: IComment) => {
+    if (!auth.user || !auth.access_token) return
+
+    dispatch(deleteComment(comment, auth.access_token))
+  }
+
   const Nav = (comment: IComment) => (
     <div>
-      <i className='fas fa-trash-alt mx-2' />
+      <i
+        className='fas fa-trash-alt mx-2'
+        onClick={() => handleDelete(comment)}
+      />
       <i className='fas fa-edit me-2' onClick={() => setEdit(comment)} />
     </div>
   )
@@ -79,12 +92,15 @@ const CommentList: React.FC<IProps> = ({
             </small>
 
             <small className='d-flex'>
-              <div style={{ cursor: 'pointer' }}>
+              <div className='comment_nav'>
                 {comment.blog_user_id === auth.user?._id ? (
                   comment.user._id === auth.user._id ? (
                     Nav(comment)
                   ) : (
-                    <i className='fas fa-trash-alt mx-2' />
+                    <i
+                      className='fas fa-trash-alt mx-2'
+                      onClick={() => handleDelete(comment)}
+                    />
                   )
                 ) : (
                   comment.user._id === auth.user?._id && Nav(comment)
