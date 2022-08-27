@@ -10,6 +10,7 @@ import { refreshToken } from './redux/actions/authAction'
 import { getHomeBlogs } from './redux/actions/blogAction'
 import { getCategories } from './redux/actions/categoryAction'
 import io from 'socket.io-client'
+import SocketClient from './SocketClient'
 
 function App() {
   const dispatch: Dispatch<any> = useDispatch()
@@ -23,6 +24,7 @@ function App() {
   useEffect(() => {
     const socket = io()
     dispatch({ type: 'SOCKET', payload: socket })
+
     return () => {
       socket.close()
     }
@@ -30,6 +32,7 @@ function App() {
 
   return (
     <div className='container'>
+      <SocketClient />
       <BrowserRouter>
         <Alert />
         <Header />

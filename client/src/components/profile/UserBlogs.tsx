@@ -10,12 +10,12 @@ import Pagination from '../global/Pagination'
 
 const UserBlogs = () => {
   const { blogsUser } = useSelector((state: RootStore) => state)
+  console.log(blogsUser)
 
   const dispatch: Dispatch<any> = useDispatch()
   const user_id = useParams().slug
   const navigate = useNavigate()
-  const location = useLocation()
-  const { search } = location
+  const { search } = useLocation()
 
   const [blogs, setBlogs] = useState<IBlog[]>()
   const [total, setTotal] = useState(0)
@@ -41,7 +41,8 @@ const UserBlogs = () => {
   }
 
   if (!blogs) return <Loading />
-  if (blogs.length === 0) return <h3 className='text-center'>No Blogs</h3>
+  if (blogs.length === 0 && total < 1)
+    return <h3 className='text-center'>No Blogs</h3>
   return (
     <div>
       <div>
@@ -51,7 +52,7 @@ const UserBlogs = () => {
       </div>
 
       <div>
-        {total > 1 && <Pagination total={total} callback={handlePagination} />}
+        <Pagination total={total} callback={handlePagination} />
       </div>
     </div>
   )

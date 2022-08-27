@@ -5,12 +5,17 @@ import CardHoriz from '../components/cards/CardHoriz'
 import CreateForm from '../components/cards/CreateForm'
 import Quill from '../components/editor/ReactQuill'
 import NotFound from '../components/global/NotFound'
-import { createBlog } from '../redux/actions/blogAction'
+import { createBlog, updateBlog } from '../redux/actions/blogAction'
 import { ALERT } from '../redux/types/alertType'
-import { IBlog, RootStore } from '../utils/TypeScript'
-import { validCreateBlog } from '../utils/Valid'
+import { getAPI } from '../utils/FetchData'
+import { IBlog, IUser, RootStore } from '../utils/TypeScript'
+import { shallowEqual, validCreateBlog } from '../utils/Valid'
 
-const CreateBlog = () => {
+interface IProps {
+  id?: string
+}
+
+const CreateBlog: React.FC<IProps> = ({ id }) => {
   const { auth } = useSelector((state: RootStore) => state)
 
   const dispatch: Dispatch<any> = useDispatch()
@@ -29,6 +34,7 @@ const CreateBlog = () => {
   const [blog, setBlog] = useState<IBlog>(initState)
   const [body, setBody] = useState('')
   const [text, setText] = useState('')
+  const [oldData, setOldData] = useState<IBlog>(initState)
 
   const handleSubmit = async () => {
     if (!auth.access_token) return
@@ -38,8 +44,52 @@ const CreateBlog = () => {
       return dispatch({ type: ALERT, payload: { errors: check.errMsg } })
 
     let newData = { ...blog, content: body }
-    dispatch(createBlog(newData, auth.access_token))
+
+    if (id) {
+      if ((blog.user as IUser)._id !== auth.user?._id)
+        return dispatch({
+          type: ALERT,
+          payload: { errors: 'Invalid Authentication.' }
+        })
+
+      const result = shallowEqual(oldData, newData)
+      if (result)
+        return dispatch({
+          type: ALERT,
+          payload: { errors: 'The data does not change.' }
+        })
+
+      dispatch(updateBlog(newData, auth.access_token))
+    } else dispatch(createBlog(newData, auth.access_token))
   }
+
+  useEffect(() => {
+    if (!id) return
+
+    getAPI(`blog/${id}`)
+      .then(res => {
+        setBlog(res.data)
+        setBody(res.data.content)
+        setOldData(res.data)
+      })
+      .catch(err => console.log(err))
+
+    const initData = {
+      user: '',
+      title: '',
+      content: '',
+      description: '',
+      thumbnail: '',
+      category: '',
+      createdAt: new Date().toISOString()
+    }
+
+    return () => {
+      setBlog(initData)
+      setBody('')
+      setOldData(initData)
+    }
+  }, [id])
 
   useEffect(() => {
     const div = divRef.current
@@ -65,7 +115,7 @@ const CreateBlog = () => {
         </div>
       </div>
 
-      <Quill setBody={setBody} />
+      <Quill setBody={setBody} body={body} />
 
       <div
         ref={divRef}
@@ -78,7 +128,7 @@ const CreateBlog = () => {
         className='btn btn-dark mt-3 d-block mx-auto'
         onClick={handleSubmit}
       >
-        Create Post
+        {id ? 'Update Post' : 'Create Post'}
       </button>
     </div>
   )

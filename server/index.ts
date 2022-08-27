@@ -37,4 +37,4 @@ import { SocketServer } from './config/socket'
 const PORT = process.env.PORT || 5000
 http.listen(PORT, () => console.log('Server is running on port', PORT))
 
-// MERN STACK + TYPESCRIPT + REDUX | BLOG TUTORIAL | COMMENT REALTIME #46 | 2:37 / 34:10
+// BLOG APP #49 Expired Access Token & Invalidating Refresh Token | MERN STACK + TYPESCRIP + REDUX

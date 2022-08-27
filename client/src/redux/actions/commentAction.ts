@@ -3,30 +3,19 @@ import { deleteAPI, getAPI, patchAPI, postAPI } from '../../utils/FetchData'
 import { IComment } from '../../utils/TypeScript'
 import { ALERT, IAlertType } from '../types/alertType'
 import {
-  CREATE_COMMENT,
-  DELETE_COMMENT,
-  DELETE_REPLY_COMMENT,
   GET_COMMENTS,
   ICreateCommentType,
   IDeleteCommentType,
   IGetCommentsType,
   IReplyCommentType,
-  IUpdateCommentType,
-  REPLY_COMMENT,
-  UPDATE_COMMENT,
-  UPDATE_REPLY_COMMENT
+  IUpdateCommentType
 } from '../types/commentType'
 
 export const createComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | ICreateCommentType>) => {
     try {
-      const res = await postAPI('comment', data, token)
-
-      // dispatch({
-      //   type: CREATE_COMMENT,
-      //   payload: { ...res.data, user: data.user }
-      // })
+      await postAPI('comment', data, token)
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }
@@ -54,15 +43,7 @@ export const replyComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IReplyCommentType>) => {
     try {
-      const res = await postAPI('reply_comment', data, token)
-      dispatch({
-        type: REPLY_COMMENT,
-        payload: {
-          ...res.data,
-          user: data.user,
-          reply_user: data.reply_user
-        }
-      })
+      await postAPI('reply_comment', data, token)
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }
@@ -72,12 +53,7 @@ export const updateComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IUpdateCommentType>) => {
     try {
-      dispatch({
-        type: data.comment_root ? UPDATE_REPLY_COMMENT : UPDATE_COMMENT,
-        payload: data
-      })
-
-      await patchAPI(`comment/${data._id}`, { content: data.content }, token)
+      await patchAPI(`comment/${data._id}`, { data }, token)
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }
@@ -87,11 +63,6 @@ export const deleteComment =
   (data: IComment, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteCommentType>) => {
     try {
-      dispatch({
-        type: data.comment_root ? DELETE_REPLY_COMMENT : DELETE_COMMENT,
-        payload: data
-      })
-
       await deleteAPI(`comment/${data._id}`, token)
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })

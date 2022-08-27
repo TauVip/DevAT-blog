@@ -7,9 +7,10 @@ import { checkImage, imageUpload } from '../../utils/ImageUpload'
 
 interface IProps {
   setBody: (value: string) => void
+  body: string
 }
 
-const Quill: React.FC<IProps> = ({ setBody }) => {
+const Quill: React.FC<IProps> = ({ setBody, body }) => {
   const modules = { toolbar: { container } }
 
   const quillRef = useRef<ReactQuill>(null)
@@ -59,6 +60,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
         modules={modules}
         placeholder='Write something...'
         onChange={e => setBody(e)}
+        value={body}
         ref={quillRef}
       />
     </div>

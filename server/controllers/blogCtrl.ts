@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import Blogs from '../models/blogModel'
 import { IReqAuth } from '../config/interface'
 import mongoose from 'mongoose'
+import Comments from '../models/commentModel'
 
 const Pagination = (req: IReqAuth) => {
   let page = Number(req.query.page) * 1 || 1
@@ -28,7 +29,7 @@ const blogCtrl = {
       })
       await newBlog.save()
 
-      res.json({ newBlog })
+      res.json({ ...newBlog._doc, user: req.user })
     } catch (err: any) {
       return res.status(500).json({ msg: err.message })
     }
@@ -220,6 +221,45 @@ const blogCtrl = {
       )
       if (!blog) return res.status(400).json({ msg: 'Blog does not exist.' })
       return res.json(blog)
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message })
+    }
+  },
+  updateBlog: async (req: IReqAuth, res: Response) => {
+    if (!req.user)
+      return res.status(400).json({ msg: 'Invalid Authentication.' })
+
+    try {
+      const blog = await Blogs.findOneAndUpdate(
+        {
+          _id: req.params.id,
+          user: req.user._id
+        },
+        req.body
+      )
+      if (!blog) return res.status(400).json({ msg: 'Invalid Authentication.' })
+
+      res.json({ msg: 'Update Success!', blog })
+    } catch (err: any) {
+      return res.status(500).json({ msg: err.message })
+    }
+  },
+  deleteBlog: async (req: IReqAuth, res: Response) => {
+    if (!req.user)
+      return res.status(400).json({ msg: 'Invalid Authentication.' })
+
+    try {
+      // Delete Blog
+      const blog = await Blogs.findOneAndDelete({
+        _id: req.params.id,
+        user: req.user._id
+      })
+      if (!blog) return res.status(400).json({ msg: 'Invalid Authentication.' })
+
+      // Delete Comments
+      await Comments.deleteMany({ blog_id: blog._id })
+
+      res.json({ msg: 'Delete Success!' })
     } catch (err: any) {
       return res.status(500).json({ msg: err.message })
     }
