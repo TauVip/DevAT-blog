@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux'
+import { checkTokenExp } from '../../utils/checkTokenExp'
 import { getAPI, postAPI } from '../../utils/FetchData'
 import { IUserLogin, IUserRegister } from '../../utils/TypeScript'
 import { validPhone, validRegister } from '../../utils/Valid'
@@ -60,11 +61,14 @@ export const refreshToken =
     }
   }
 
-export const logout = () => async (dispatch: any) => {
+export const logout = (token: string) => async (dispatch: any) => {
+  const result = await checkTokenExp(token, dispatch)
+  const access_token = result ? result : token
+
   try {
     localStorage.removeItem('logged')
     dispatch({ type: AUTH, payload: {} })
-    await getAPI('logout')
+    await getAPI('logout', access_token)
   } catch (err: any) {
     dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
   }

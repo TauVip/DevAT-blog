@@ -10,7 +10,6 @@ import Pagination from '../global/Pagination'
 
 const UserBlogs = () => {
   const { blogsUser } = useSelector((state: RootStore) => state)
-  console.log(blogsUser)
 
   const dispatch: Dispatch<any> = useDispatch()
   const user_id = useParams().slug

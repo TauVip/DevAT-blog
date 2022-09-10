@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux'
+import { checkTokenExp } from '../../utils/checkTokenExp'
 import { deleteAPI, getAPI, postAPI, putAPI } from '../../utils/FetchData'
 import { imageUpload } from '../../utils/ImageUpload'
 import { IBlog } from '../../utils/TypeScript'
@@ -105,6 +106,9 @@ export const updateBlog =
   (blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
     let url
 
+    const result = await checkTokenExp(token, dispatch)
+    const access_token = result ? result : token
+
     try {
       dispatch({ type: ALERT, payload: { loading: true } })
 
@@ -114,7 +118,7 @@ export const updateBlog =
       } else url = blog.thumbnail
 
       const newBlog = { ...blog, thumbnail: url }
-      const res = await putAPI(`blog/${newBlog._id}`, newBlog, token)
+      const res = await putAPI(`blog/${newBlog._id}`, newBlog, access_token)
       dispatch({ type: ALERT, payload: { success: res.data.msg } })
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
@@ -124,13 +128,16 @@ export const updateBlog =
 export const deleteBlog =
   (blog: IBlog, token: string) =>
   async (dispatch: Dispatch<IAlertType | IDeleteBlogsUserType>) => {
+    const result = await checkTokenExp(token, dispatch)
+    const access_token = result ? result : token
+
     try {
       dispatch({
         type: DELETE_BLOGS_USER_ID,
         payload: blog
       })
 
-      await deleteAPI(`blog/${blog._id}`, token)
+      await deleteAPI(`blog/${blog._id}`, access_token)
     } catch (err: any) {
       dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
     }

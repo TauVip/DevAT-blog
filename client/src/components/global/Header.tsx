@@ -4,7 +4,10 @@ import Search from './Search'
 
 const Header = () => {
   return (
-    <nav className='navbar navbar-expand-lg navbar-light bg-light p-3'>
+    <nav
+      className='navbar navbar-expand-lg navbar-light bg-light p-3'
+      style={{ position: 'sticky', top: 0, left: 0, zIndex: 9 }}
+    >
       <Link className='navbar-brand' to='/'>
         BlogDev
       </Link>

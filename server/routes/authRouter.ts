@@ -1,5 +1,6 @@
 import express from 'express'
 import authCtrl from '../controllers/authCtrl'
+import auth from '../middleware/auth'
 import { validRegister } from '../middleware/valid'
 
 const router = express.Router()
@@ -10,7 +11,7 @@ router.post('/active', authCtrl.activeAccount)
 
 router.post('/login', authCtrl.login)
 
-router.get('/logout', authCtrl.logout)
+router.get('/logout', auth, authCtrl.logout)
 
 router.get('/refresh_token', authCtrl.refreshToken)
 

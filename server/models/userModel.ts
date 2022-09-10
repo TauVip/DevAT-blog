@@ -31,7 +31,8 @@ const userSchema = new mongoose.Schema(
     type: {
       type: String,
       default: 'register' // Login
-    }
+    },
+    rf_token: { type: String, select: false }
   },
   { timestamps: true }
 )

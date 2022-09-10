@@ -23,11 +23,7 @@ export const io = new Server(http)
 io.on('connection', (socket: Socket) => SocketServer(socket))
 
 // Routes
-app.use('/api', routes.authRouter)
-app.use('/api', routes.userRouter)
-app.use('/api', routes.categoryRouter)
-app.use('/api', routes.blogRouter)
-app.use('/api', routes.commentRouter)
+app.use('/api', routes)
 
 // Database
 import './config/database'
@@ -37,4 +33,4 @@ import { SocketServer } from './config/socket'
 const PORT = process.env.PORT || 5000
 http.listen(PORT, () => console.log('Server is running on port', PORT))
 
-// BLOG APP #49 Expired Access Token & Invalidating Refresh Token | MERN STACK + TYPESCRIP + REDUX
+// BLOG APP #50 SEARCH BLOGS | MERN STACK + TYPESCRIPT + REDUX | 21:29 / 25:47
