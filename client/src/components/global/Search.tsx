@@ -12,7 +12,7 @@ const Search = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
-      if (search.length < 2) return
+      if (search.length < 2) return setBlogs([])
 
       try {
         const res = await getAPI(`search/blogs?title=${search}`)
@@ -25,6 +25,11 @@ const Search = () => {
 
     return () => clearTimeout(delayDebounce)
   }, [search])
+
+  useEffect(() => {
+    setSearch('')
+    setBlogs([])
+  }, [pathname])
 
   return (
     <div className='search w-100 position-relative me-4'>
@@ -49,7 +54,7 @@ const Search = () => {
           {blogs.length ? (
             blogs.map(blog => <CardHoriz key={blog._id} blog={blog} />)
           ) : (
-            <h3>No Blogs</h3>
+            <h3 className='text-center'>No Blogs</h3>
           )}
         </div>
       )}

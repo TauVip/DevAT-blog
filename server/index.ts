@@ -33,4 +33,4 @@ import { SocketServer } from './config/socket'
 const PORT = process.env.PORT || 5000
 http.listen(PORT, () => console.log('Server is running on port', PORT))
 
-// BLOG APP #50 SEARCH BLOGS | MERN STACK + TYPESCRIPT + REDUX | 21:29 / 25:47
+// BLOG APP #51 FORGOT PASSWORD | MERN STACK + TYPESCRIPT + REDUX | 7:30 / 32:33

@@ -143,3 +143,16 @@ export const verifySMS = async (
     setTimeout(() => verifySMS(phone, dispatch), 100)
   }
 }
+
+export const forgotPassword =
+  (account: string) => async (dispatch: Dispatch<IAlertType>) => {
+    try {
+      dispatch({ type: ALERT, payload: { loading: true } })
+
+      console.log({ account })
+
+      dispatch({ type: ALERT, payload: { loading: false } })
+    } catch (err: any) {
+      dispatch({ type: ALERT, payload: { errors: err.response.data.msg } })
+    }
+  }
